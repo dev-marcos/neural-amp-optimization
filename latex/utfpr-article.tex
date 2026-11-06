@@ -1,0 +1,361 @@
+%%%% Artigo — Estudo Individual 1 (PPGCA/UTFPR)
+%%%% Baseado no modelo UTFPR-Article v2.1 (Luiz E. M. Lima, LPPL 1.3).
+%%%% Cópia do modelo original: ./_modelo-original/
+%%%% Compilar: make pdf2   (pdflatex + biber), ou no Overleaf-UTFPR.
+
+%% Classe de documento
+\documentclass[%
+  a4paper,%
+  12pt,%
+  fleqn,%
+  english,%% Idioma secundário
+  brazilian,%% Idioma primário
+]{article}
+
+%% Pacote de estilos da UTFPR (Leiaute B = margens iguais, seções numeradas)
+\usepackage[%
+  Layout    = B,%
+  DocLic    = None,%
+  ABNTCit   = AAY,%% Citação ABNT autor-data
+  DOIIcon   = On,%
+  URLIcon   = On,%
+]{utfpr-article}
+
+%% ---------------------------------------------------------------------------
+%% Informações do documento
+%% ---------------------------------------------------------------------------
+\Title[Otimização de modelos neurais para emulação de amplificadores]{%
+  Otimização de modelos neurais para emulação de amplificadores de guitarra em tempo real: uma revisão%
+}{%
+  Optimization of neural models for real-time guitar amplifier emulation: a review%
+}
+
+%% TODO (opcional): preencher Lattes/ORCID
+\Author{1}{%
+  Name        = {Marcos Vinicius Rocha da Silva},%
+  Email       = {marcosviniciusrochadasilva@gmail.com},%
+%   Lattes      = {0000000000000000},%
+%   ORCID       = {0000-0000-0000-0000},%
+  Affiliation = {\UTFPRName, Curitiba, Paraná, Brasil},%
+  Role        = {Mestrando do Programa de Pós-Graduação em Computação Aplicada (PPGCA)},%
+}
+\Author{2}{%
+  Name        = {Ricardo Dutra da Silva},%
+  Email       = {rdsilva@utfpr.edu.br},%
+  Affiliation = {\UTFPRName, Curitiba, Paraná, Brasil},%
+  Role        = {Docente do Programa de Pós-Graduação em Computação Aplicada (PPGCA)},%
+}
+\Authors{M.~V.~R. da Silva e R.~D. da Silva}
+
+\InstitutionInfo{%
+  Campus     = {Curitiba},%
+  Department = {Programa de Pós-Graduação em Computação Aplicada (PPGCA)},%
+}
+
+%% Palavras-chave (de 3 a 5)
+\Keyword{1}{aprendizado profundo}{deep learning}
+\Keyword{2}{compressão de modelos}{model compression}
+\Keyword{3}{processamento de sinais de áudio}{audio signal processing}
+\Keyword{4}{sistemas embarcados}{embedded systems}
+
+%% ---------------------------------------------------------------------------
+%% Resumo e Abstract (150 a 200 palavras, sem citações nem símbolos)
+%% ---------------------------------------------------------------------------
+\begin{Abstract}[brazilian]
+Redes neurais profundas tornaram-se a abordagem dominante para emular amplificadores e pedais de guitarra elétrica, com ferramentas de código aberto como o Neural Amp Modeler alcançando fidelidade próxima à do equipamento analógico.
+Contudo, esses modelos precisam processar áudio amostra a amostra, com baixa latência e sob orçamento computacional rígido, o que limita sua execução em processadores embarcados, dispositivos móveis e pedaleiras de baixo custo.
+Este trabalho, desenvolvido no âmbito de um estudo individual de mestrado, apresenta uma revisão da literatura sobre técnicas de otimização de modelos de inteligência artificial aplicadas à emulação neural de amplificadores, abrangendo escolha de arquitetura, poda, quantização, destilação de conhecimento, busca automática de arquiteturas e redes de custo ajustável.
+Define-se um protocolo de revisão com questões de pesquisa, bases de busca e critérios de seleção, e apresenta-se um mapeamento preliminar dos principais trabalhos entre 2019 e 2026.
+Os resultados indicam que a poda foi a técnica mais explorada, enquanto a quantização para inteiros, a combinação de técnicas e a destilação a partir de modelos convolucionais permanecem pouco investigadas, assim como a avaliação padronizada de latência em hardware real e a avaliação perceptiva dos modelos comprimidos.
+Essas lacunas orientam a proposta de continuidade da pesquisa.
+\end{Abstract}
+
+\begin{Abstract}[english]
+Deep neural networks have become the dominant approach for emulating electric guitar amplifiers and pedals, with open-source tools such as Neural Amp Modeler reaching fidelity close to that of analog equipment.
+However, these models must process audio sample by sample, with low latency and under a strict computational budget, which limits their execution on embedded processors, mobile devices and low-cost multi-effect units.
+This work, carried out as an individual study in a master's program, presents a literature review on artificial intelligence model optimization techniques applied to neural amplifier emulation, covering architecture choice, pruning, quantization, knowledge distillation, automatic architecture search and networks with adjustable cost.
+A review protocol is defined, with research questions, search databases and selection criteria, and a preliminary mapping of the main works published between 2019 and 2026 is presented.
+The results indicate that pruning has been the most explored technique, whereas integer quantization, the combination of techniques and distillation from convolutional teachers remain little investigated, as do the standardized evaluation of latency on real hardware and the perceptual evaluation of compressed models.
+These gaps guide the proposal for the continuation of the research.
+\end{Abstract}
+
+%% Legendas e fontes de ilustrações e tabelas em negrito
+\BoldCaption
+
+%% Arquivo de referências
+\addbibresource{utfpr-article.bib}
+
+%% ===========================================================================
+\begin{document}
+%% ===========================================================================
+
+\section{Introdução}%
+\label{sect:intro}
+
+A emulação digital de amplificadores valvulados e pedais de distorção é um problema clássico de processamento de sinais de áudio.
+Esses equipamentos apresentam comportamento não linear e com memória, de modo que a saída depende não apenas da amostra atual do sinal da guitarra, mas também de seu histórico recente.
+Historicamente, o problema foi tratado por modelagem de circuitos (abordagem \ENLang*{white-box}) ou por modelos de blocos com parâmetros ajustados a partir de medições (\ENLang*{grey-box}).
+Na última década, porém, a modelagem \ENLang*{black-box} por redes neurais profundas passou a dominar a área, por exigir apenas pares de sinais de entrada e saída gravados do equipamento real \cite{Vanhatalo2022}.
+
+Trabalhos do grupo da Universidade Aalto mostraram que redes recorrentes \cite{Wright2019} e redes convolucionais inspiradas na WaveNet \cite{Damskagg2019} conseguem emular amplificadores com qualidade avaliada como próxima da original em testes de audição, executando em tempo real em computadores pessoais \cite{Wright2020}.
+Essa linha de pesquisa foi popularizada pelo Neural Amp Modeler (NAM), ferramenta de código aberto que permite a qualquer músico capturar o próprio equipamento e executá-lo como \ENLang*{plug-in} \cite{Atkinson2023}.
+
+O obstáculo prático é o custo computacional.
+Um modelo de amplificador precisa produzir uma amostra de saída a cada \Unit[20,8]{\mu\mathrm{s}} (para \Unit[48]{kHz}), com latência total imperceptível ao instrumentista e sem falhas de processamento.
+Modelos convolucionais de alta fidelidade são pesados para processadores embarcados, celulares e pedaleiras de baixo custo, o que historicamente restringiu sua execução a computadores pessoais ou a \ENLang*{hardware} dedicado de processamento de sinais \cite{Sato2026}.
+Esse cenário torna a \textbf{otimização de modelos de inteligência artificial} (IA) --- conjunto de técnicas que reduzem memória, operações e latência preservando a qualidade \cite{Cheng2018} --- um tema central para levar a emulação neural a plataformas restritas.
+
+Este artigo apresenta os resultados iniciais do Estudo Individual~1 do mestrado em Computação Aplicada da UTFPR, na linha de pesquisa em Ciência de Dados e Aprendizado de Máquina.
+O objetivo é \textbf{levantar e organizar o estado da arte das técnicas de otimização aplicadas à emulação neural de amplificadores de guitarra, a fim de identificar lacunas que possam ser exploradas na dissertação}.
+As contribuições são:
+\begin{enumerate}[label = {\alph*)}]
+\item uma síntese dos fundamentos de emulação neural e das restrições de tempo real;
+\item uma taxonomia das técnicas de otimização de modelos aplicáveis ao problema;
+\item um protocolo de revisão da literatura;
+\item um mapeamento preliminar dos trabalhos e a identificação de lacunas de pesquisa.
+\end{enumerate}
+
+O restante do texto está organizado como segue.
+A \Cref{sect:fund} apresenta a fundamentação teórica; a \Cref{sect:metodo} descreve o protocolo de revisão; a \Cref{sect:res-disc} apresenta e discute o mapeamento preliminar; e a \Cref{sect:concl} traz as considerações finais e os próximos passos.
+
+%% ---------------------------------------------------------------------------
+\section{Fundamentação teórica}%
+\label{sect:fund}
+
+\subsection{Emulação neural de amplificadores}%
+\label{ssect:emul}
+
+Na abordagem \ENLang*{black-box}, o amplificador é tratado como um sistema desconhecido que mapeia o sinal de entrada $x[n]$ (guitarra limpa) no sinal de saída $y[n]$ (guitarra processada).
+Uma rede neural $f_{\theta}$ é treinada para aproximar esse mapeamento a partir de gravações pareadas, e a medida de erro mais utilizada é a razão erro-sinal (ESR, do inglês \ENLang*{error-to-signal ratio}), definida na \Cref{eq:esr}, em que $\hat{y}[n]$ é a saída do modelo e $N$ o número de amostras \cite{Wright2020}:
+\begin{equation}%
+\label{eq:esr}
+\mathrm{ESR} = \frac{\sum_{n=0}^{N-1} \left(y[n] - \hat{y}[n]\right)^{2}}{\sum_{n=0}^{N-1} y[n]^{2}}
+\end{equation}
+
+Em geral, aplica-se um filtro de pré-ênfase aos sinais antes do cálculo do erro, para aproximar a função de perda da sensibilidade auditiva \cite{Wright2020loss}.
+Modelos condicionados recebem ainda os valores dos controles do painel (ganho, equalização) como entradas adicionais, de modo que um único modelo representa toda a faixa de ajustes do equipamento \cite{Juvela2023}.
+
+As duas famílias de arquiteturas mais adotadas são:
+\begin{enumerate}[label = {\alph*)}]
+\item \textbf{redes recorrentes}: \ENLang*{Long Short-Term Memory} (LSTM) \cite{Hochreiter1997} e variantes, que mantêm um estado interno e processam uma amostra por vez; modelos com poucas dezenas de unidades ocultas já alcançam boa qualidade com baixo custo \cite{Wright2019};
+\item \textbf{redes convolucionais com dilatação}: inspiradas na WaveNet \cite{Oord2016}, porém causais e não autorregressivas, empilham convoluções com dilatações crescentes para obter um campo receptivo longo, como na \Cref{eq:rf}, em que $k$ é o tamanho do \ENLang*{kernel} e $d_{\ell}$ a dilatação da camada $\ell$ \cite{Damskagg2019,Steinmetz2022}.
+\end{enumerate}
+\begin{equation}%
+\label{eq:rf}
+R = 1 + (k - 1) \sum_{\ell=1}^{L} d_{\ell}
+\end{equation}
+
+O NAM adota principalmente a arquitetura convolucional (denominada WaveNet na ferramenta), oferecendo também LSTM, em configurações de tamanhos distintos \cite{Atkinson2023}.
+Alternativas \ENLang*{grey-box} baseadas em processamento digital de sinais diferenciável (DDSP) têm sido propostas para obter modelos interpretáveis e mais leves \cite{Yeh2024,Comunita2025}.
+
+\subsection{Restrição de tempo real}%
+\label{ssect:tempo-real}
+
+Em processamento de áudio em tempo real, o sistema recebe blocos de $B$ amostras à taxa $f_s$ e precisa entregar cada bloco processado antes que o próximo chegue.
+A condição de tempo real pode ser expressa pelo fator de tempo real (RTF, do inglês \ENLang*{real-time factor}) na \Cref{eq:rtf}, em que $T_{\mathrm{inf}}(B)$ é o tempo de inferência para um bloco:
+\begin{equation}%
+\label{eq:rtf}
+\mathrm{RTF} = \frac{T_{\mathrm{inf}}(B)}{B / f_s} < 1
+\end{equation}
+
+Para $B = 64$ e $f_s = \Unit[48]{kHz}$, o orçamento é de cerca de \Unit[1,33]{ms} por bloco, que deve ser compartilhado com outros efeitos e com o sistema operacional.
+Em dispositivos embarcados, a memória disponível e o consumo de energia também se tornam restrições relevantes.
+Por isso, métricas como número de parâmetros e operações por amostra são indicadores apenas aproximados: o desempenho efetivo depende do \ENLang*{hardware}, da implementação e da exploração de paralelismo e esparsidade \cite{Blalock2020}.
+
+\subsection{Técnicas de otimização de modelos}%
+\label{ssect:otim}
+
+A literatura de compressão e aceleração de redes neurais agrupa as técnicas em algumas famílias principais \cite{Cheng2018}:
+
+\subsubsection{Poda (\texorpdfstring{\ENLang*{pruning}}{pruning})}
+Remove pesos ou estruturas (neurônios, canais, camadas) de pouca importância.
+A poda por magnitude zera os pesos de menor valor absoluto por meio de uma máscara $m$, isto é, $\theta' = m \odot \theta$, e costuma ser seguida de re-treinamento.
+A hipótese do bilhete de loteria sugere que redes densas contêm sub-redes esparsas capazes de atingir desempenho equivalente quando re-treinadas a partir da inicialização original \cite{Frankle2019}.
+A poda não estruturada só reduz latência se houver implementação que explore a esparsidade, enquanto a poda estruturada reduz diretamente as dimensões das operações \cite{Blalock2020}.
+
+\subsubsection{Quantização}
+Representa pesos e ativações com menos \ENLang*{bits}, tipicamente inteiros de 8~\ENLang*{bits}.
+Na quantização afim uniforme, um valor real $r$ é mapeado em um inteiro $q$ por $q = \operatorname{round}(r/s) + z$, em que $s$ é o fator de escala e $z$ o ponto zero \cite{Jacob2018}.
+Pode ser aplicada após o treinamento (PTQ) ou simulada durante o treinamento (QAT), sendo esta última mais robusta para baixas precisões \cite{Gholami2021}.
+A quantização é especialmente atrativa em microcontroladores e processadores sem unidade de ponto flutuante eficiente.
+
+\subsubsection{Destilação de conhecimento}
+Treina um modelo pequeno (aluno) para imitar um modelo grande (professor) \cite{Hinton2015}.
+Em problemas de regressão de áudio, a perda do aluno pode combinar o erro em relação ao sinal real e o erro em relação à saída (ou às representações internas) do professor, como na \Cref{eq:kd}, em que $\alpha$ pondera os dois termos:
+\begin{equation}%
+\label{eq:kd}
+\mathcal{L}_{\mathrm{aluno}} = (1 - \alpha)\, \mathcal{L}\left(y, \hat{y}_{\mathrm{a}}\right) + \alpha\, \mathcal{L}\left(\hat{y}_{\mathrm{p}}, \hat{y}_{\mathrm{a}}\right)
+\end{equation}
+
+\subsubsection{Busca de arquitetura neural (NAS)}
+Automatiza a escolha da arquitetura em um espaço de busca, usando estratégias como algoritmos evolutivos, aprendizado por reforço ou métodos baseados em gradiente \cite{Elsken2019}.
+Na variante ciente de \ENLang*{hardware}, a latência medida ou estimada no dispositivo-alvo entra como objetivo adicional.
+
+\subsubsection{Arquiteturas eficientes e de custo ajustável}
+Incluem o projeto manual de arquiteturas leves (por exemplo, convoluções com dilatação de crescimento rápido \cite{Steinmetz2022}) e redes \ENLang*{slimmable}, cuja largura pode ser reduzida em tempo de execução sem novo treinamento \cite{Atkinson2025}.
+
+Essas técnicas são complementares: o \ENLang*{pipeline} clássico de \ENLang*{Deep Compression}, por exemplo, combina poda, quantização treinada e codificação de Huffman \cite{Han2016}.
+
+%% ---------------------------------------------------------------------------
+\section{Metodologia}%
+\label{sect:metodo}
+
+A pesquisa segue um protocolo de revisão sistemática da literatura adaptado das diretrizes de \textcite{Kitchenham2007}, organizado em planejamento, condução e relato.
+Nesta etapa do estudo, o protocolo foi definido e aplicado de forma exploratória, produzindo o mapeamento preliminar da \Cref{sect:res-disc}; a aplicação completa, com contagens por etapa de seleção, é parte dos próximos passos.
+
+\subsection{Questões de pesquisa}%
+\label{ssect:qp}
+
+\begin{enumerate}[label = {QP\arabic*:}, leftmargin = *]
+\item Quais técnicas de otimização de modelos têm sido aplicadas à emulação neural de amplificadores e efeitos de distorção?
+\item Quais arquiteturas, conjuntos de dados e plataformas de \ENLang*{hardware} são utilizados nesses trabalhos?
+\item Quais métricas são usadas para avaliar qualidade (objetiva e perceptiva) e custo computacional?
+\item Quais combinações de técnica, arquitetura e plataforma ainda não foram investigadas?
+\end{enumerate}
+
+\subsection{Fontes e estratégia de busca}%
+\label{ssect:busca}
+
+As buscas são realizadas nas bases IEEE Xplore, ACM Digital Library, Scopus e arXiv, complementadas pelos acervos da conferência DAFx (\ENLang*{Digital Audio Effects}) e da \ENLang*{AES E-Library}, que concentram boa parte da produção da área.
+A \ENLang*{string} de busca genérica, ajustada à sintaxe de cada base, é:
+
+\begin{quote}
+\small\ttfamily
+("guitar amplifier" OR "distortion effect" OR "virtual analog" OR "audio effect modeling") AND ("neural network" OR "deep learning") AND (pruning OR quantization OR "knowledge distillation" OR "architecture search" OR "model compression" OR "real-time" OR efficient)
+\end{quote}
+
+Adicionalmente, aplica-se a técnica de bola de neve (\ENLang*{snowballing}) para frente e para trás a partir dos trabalhos incluídos e da revisão de \textcite{Vanhatalo2022}.
+
+\subsection{Critérios de seleção e extração}%
+\label{ssect:criterios}
+
+São incluídos trabalhos publicados a partir de 2019, em inglês ou português, que proponham ou avaliem modelos neurais para emulação de amplificadores ou efeitos não lineares e que tratem explicitamente de custo computacional ou de técnica de otimização.
+São excluídos trabalhos sem avaliação experimental, que tratem apenas de classificação ou reconhecimento de efeitos, ou cujo texto completo não esteja acessível.
+De cada trabalho são extraídos: arquitetura, técnica de otimização, conjunto de dados ou equipamento modelado, plataforma de execução, métricas de qualidade e de custo, e principais resultados.
+
+%% ---------------------------------------------------------------------------
+\section{Resultados preliminares e discussão}%
+\label{sect:res-disc}
+
+O \Cref{tfrm:mapeamento} sintetiza os trabalhos identificados até o momento que tratam explicitamente da relação entre qualidade e custo computacional em emulação neural de amplificadores e efeitos de distorção.
+Os dados foram extraídos da leitura integral de cada trabalho.
+
+\begin{tabframed}[!htbp]
+\caption{Mapeamento preliminar de trabalhos sobre otimização de modelos para emulação neural}%
+\label{tfrm:mapeamento}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}X@{}}
+\toprule%
+\textbf{Trabalho} & \textbf{Modelo e dados} & \textbf{Técnica} & \textbf{Plataforma e resultado principal} \\ \midrule%
+\textcite{Wright2019}    & LSTM e GRU comparadas à WaveNet; amplificador HT-1 e pedal Big Muff & Escolha de arquitetura & CPU de computador pessoal (\ENLang*{plug-in}); recorrentes com exatidão semelhante à WaveNet e custo significativamente menor \\ \midrule%
+\textcite{Damskagg2019}  & WaveNet causal; três pedais de distorção & Variação de camadas e canais; campo receptivo dimensionado pela resposta ao impulso & CPU de computador pessoal; tempo real com baixa latência; três minutos de áudio bastam para o treino \\ \midrule%
+\textcite{Wright2020}    & WaveNet e LSTM; três pedais e dois amplificadores valvulados & Busca em grade de hiperparâmetros & CPU de computador pessoal; em teste MUSHRA, os melhores modelos foram avaliados como excelentes \\ \midrule%
+\textcite{Steinmetz2022} & TCN causal condicionada; compressor LA-2A & Dilatação de crescimento rápido & CPU; modelo de 26 mil parâmetros 5 vezes mais rápido que o tempo real, competitivo com modelos não causais maiores \\ \midrule%
+\textcite{Sudholt2023}   & LSTM (até 96 unidades); um pedal e três amplificadores & Poda iterativa por magnitude, global e não estruturada & CPU de computador pessoal; 65,7\% a 99,6\% dos pesos removidos; aceleração de 1,3 a 3,7 vezes; sem degradação perceptiva (MUSHRA) \\ \midrule%
+\textcite{Ringhofer2024} & Espaço de mais de 41 trilhões de TCN/WaveNet; dois efeitos digitais & NAS evolutivo com latência medida no dispositivo & CPU de servidor; até 18 vezes menos latência (com perda maior) ou 56\% menos perda (1,6 vez mais lento) que modelos anteriores \\ \midrule%
+\textcite{Yeh2024}       & DDSP (\ENLang*{grey-box}) condicionado; amplificador Marshall JVM 410H & Arquitetura inspirada no circuito & Custo estimado (sem medição); 1.352 operações por amostra, menos de 10\% da GRU-48, porém menos exato que ela \\ \midrule%
+\textcite{Simionato2025} & LSTM; amplificador HT-1, pedal Big Muff e \ENLang*{plug-in} DrDrive & Destilação baseada em representações internas & Custo estimado (sem medição); alunos destilados mais exatos que alunos de mesmo tamanho; diferença perceptiva não significativa \\ \midrule%
+\textcite{Atkinson2025}  & WaveNet do NAM; quatro timbres de três amplificadores & Rede \ENLang*{slimmable} & \ENLang*{Plug-in}; largura ajustável em tempo de execução, sem novo treinamento \\ \midrule%
+\textcite{Sato2026}      & WaveNet de 21.913 parâmetros; três amplificadores e um pedal & Poda iterativa por magnitude (90\%) e motor de inferência esparso & iPhone 16 Pro, somente CPU; modelo denso não executa em tempo real, podado atinge RTF de cerca de 0,6 \\ \bottomrule%
+\end{tabularx}
+\SourceOrNote{elaboração própria (\YearNum)}
+\end{tabframed}
+
+\subsection{Técnicas e arquiteturas investigadas (QP1 e QP2)}%
+\label{ssect:qp12}
+
+O mapeamento indica que a área evoluiu de uma fase em que a eficiência era obtida pela \textbf{escolha manual de arquiteturas compactas} para uma fase de aplicação de técnicas de compressão específicas.
+Na primeira fase, \textcite{Wright2019} mostraram que redes recorrentes alcançam exatidão semelhante à de redes convolucionais com custo significativamente menor, e \textcite{Damskagg2019} e \textcite{Wright2020} exploraram por busca em grade o número de camadas, de canais e a função de ativação de redes do tipo WaveNet.
+\textcite{Steinmetz2022} obtiveram campos receptivos de \Unit[100]{ms} a \Unit[1]{s} com apenas quatro ou cinco camadas, usando dilatações que crescem por um fator 10 a cada camada; a menor TCN causal avaliada, com 26 mil parâmetros e campo receptivo de \Unit[101]{ms}, executou 5 vezes mais rápido que o tempo real em CPU.
+
+A \textbf{poda} é a técnica com mais evidência.
+\textcite{Sudholt2023} aplicaram poda iterativa por magnitude, global e não estruturada, a modelos LSTM, removendo 30\% dos pesos restantes em cada uma de 15 iterações, com um critério de parada antecipada baseado na estabilização da máscara.
+Dois achados são particularmente relevantes.
+Primeiro, a aceleração não veio da esparsidade em si: com matrizes esparsas, só houve ganho acima de 90\% de esparsidade, e o benefício real decorreu de a poda eliminar unidades ocultas inteiras, reduzindo as dimensões das multiplicações de matrizes.
+Segundo, a capacidade de poda variou com o equipamento: os amplificadores com tempo de acomodação mais longo (HT-1 e HT-5) admitiram menos poda (aceleração de 1,3 e 1,5 vezes) do que o pedal Big Muff e o amplificador Mesa (3,7 e 3,1 vezes).
+\textcite{Sato2026} estenderam a abordagem a uma rede do tipo WaveNet na configuração de \textcite{Wright2020}, aumentando a esparsidade gradualmente durante o treinamento.
+A poda em uma única etapa (\ENLang*{one-shot}) não acompanhou o sinal-alvo a 90\%, enquanto a poda iterativa manteve ESR abaixo de $3,4 \times 10^{-4}$.
+Em um iPhone 16 Pro, com blocos de 256 amostras, o modelo denso não executou em tempo real; o limiar ocorreu em torno de 70\% de esparsidade, e a 90\% o RTF ficou em cerca de 0,6.
+Para isso, os autores implementaram um motor de inferência que armazena apenas os pesos não nulos, já que bibliotecas de inferência densa não converteriam a esparsidade em ganho de tempo.
+Os dois trabalhos confirmam, no domínio do áudio, a observação geral de \textcite{Blalock2020} de que taxa de compressão e aceleração não são equivalentes.
+
+A \textbf{destilação} foi avaliada apenas com professores e alunos recorrentes.
+\textcite{Simionato2025} treinaram alunos LSTM de duas camadas (de 873 a cerca de 28 mil parâmetros) para reproduzir, via divergência de Kullback-Leibler, as representações da última camada LSTM de um professor de sete camadas com cerca de 49 mil parâmetros, combinando essa perda com o erro absoluto médio em relação ao sinal real e reduzindo gradualmente o peso da destilação ao longo das épocas --- um caso particular da \Cref{eq:kd}.
+Nos dados do amplificador valvulado Blackstar HT-1, o caso mais difícil, a destilação reduziu a ESR do aluno de 16 unidades aproximadamente pela metade.
+Os autores observaram ainda que uma distância de complexidade menor entre professor e aluno favorece os alunos menores, e que, em teste de audição do tipo MUSHRA com dez participantes válidos, a diferença perceptiva entre modelos destilados e não destilados não foi estatisticamente significativa.
+Vale notar que, segundo \textcite{Atkinson2025}, a destilação já é a solução usual entre usuários do NAM para reduzir o custo de modelos pesados, embora seja trabalhosa sem acesso a GPU; não foi encontrada, porém, avaliação sistemática publicada dessa prática.
+
+A \textbf{busca de arquitetura} ciente de \ENLang*{hardware} aparece em um único trabalho.
+\textcite{Ringhofer2024} definiram um espaço de busca com mais de 41 trilhões de combinações de TCN e WaveNet e usaram um algoritmo evolutivo regularizado cuja função de aptidão combina a perda de validação e a latência medida em CPU, ponderadas por um parâmetro de equilíbrio.
+Cada busca consumiu 96 horas de GPU, e a avaliação usou dois efeitos de distorção digitais com controles fixos, e não equipamentos analógicos; a execução em Raspberry Pi e em FPGA é indicada pelos autores como trabalho futuro.
+
+Entre as \textbf{arquiteturas alternativas}, o modelo \ENLang*{grey-box} de \textcite{Yeh2024} decompõe o amplificador em pré-amplificador, controle de tonalidade, amplificador de potência e transformador.
+Com 1.352 operações por amostra, ele foi mais exato que uma GRU de custo semelhante, mas menos exato que a GRU de 48 unidades, que exige cerca de 20 mil operações por amostra; o custo foi estimado, e não medido.
+Já a rede \ENLang*{slimmable} de \textcite{Atkinson2025} é treinada sorteando, a cada mini-lote, a largura usada nas camadas convolucionais, de modo que os pesos possam ser truncados após o treinamento sem novo ajuste.
+O autor apresenta os resultados apenas graficamente, mas informa que a arquitetura está em avaliação como a próxima arquitetura padrão do NAM, o que indica a relevância prática do problema.
+O \ENLang*{framework} NablAFx \cite{Comunita2025} oferece uma base comum para comparar modelos \ENLang*{black-box} e \ENLang*{grey-box}.
+
+Quanto à plataforma, a maioria dos trabalhos mede desempenho em CPU de computador pessoal ou de servidor, e apenas \textcite{Sato2026} demonstraram execução em dispositivo móvel.
+Não foram encontrados, até o momento, estudos revisados por pares que avaliem modelos de amplificador quantizados para inteiros em microcontroladores ou processadores digitais de sinais dedicados.
+
+\subsection{Métricas de avaliação (QP3)}%
+\label{ssect:qp3}
+
+A qualidade é avaliada predominantemente pela ESR (\Cref{eq:esr}), mas com variações que impedem a comparação direta entre trabalhos: o coeficiente do filtro de pré-ênfase muda (0,85 em \textcite{Sudholt2023} e 0,95 em \textcite{Sato2026}), e outros trabalhos usam o erro absoluto médio e distâncias espectrais em múltiplas resoluções \cite{Ringhofer2024,Yeh2024,Simionato2025}.
+O custo é reportado de forma ainda mais heterogênea: número de parâmetros, operações por amostra, latência para processar um trecho fixo de áudio ou fator de tempo real.
+Mesmo o RTF não tem definição única: \textcite{Sudholt2023} e \textcite{Sato2026} adotam a razão entre tempo de processamento e duração do áudio (\Cref{eq:rtf}, em que valores menores são melhores), enquanto \textcite{Steinmetz2022} e \textcite{Atkinson2025} reportam o inverso, isto é, quantas vezes o modelo é mais rápido que o tempo real.
+A avaliação perceptiva formal, por testes MUSHRA, aparece em \textcite{Wright2020}, \textcite{Sudholt2023} e \textcite{Simionato2025}; nos demais trabalhos, ela é informal ou ausente.
+Por outro lado, alguns conjuntos de dados se repetem --- em especial o amplificador Blackstar HT-1 e o pedal Big Muff \cite{Wright2019,Sudholt2023,Simionato2025} ---, o que favorece seu uso como referência comum em trabalhos futuros.
+
+\subsection{Lacunas identificadas (QP4)}%
+\label{ssect:lacunas}
+
+A partir do mapeamento, destacam-se as seguintes lacunas, que constituem oportunidades para a dissertação:
+
+\begin{enumerate}[label = {L\arabic*:}, leftmargin = *]
+\item \textbf{Quantização}: não há estudo sistemático de quantização pós-treinamento ou durante o treinamento em modelos de amplificador, nem da sensibilidade das não linearidades e do longo campo receptivo à perda de precisão; nos trabalhos analisados, a menor precisão aparece apenas na conversão de entrada e saída do áudio \cite{Sato2026} ou para acelerar o treinamento durante a busca de arquitetura \cite{Ringhofer2024}.
+\item \textbf{Combinação de técnicas}: poda, quantização e destilação foram estudadas isoladamente; não se encontrou avaliação de um \ENLang*{pipeline} combinado, nos moldes de \textcite{Han2016}, para emulação de áudio.
+\item \textbf{Destilação entre arquiteturas}: a destilação foi avaliada apenas entre redes recorrentes; a destilação de um professor convolucional de alta fidelidade, como o NAM, para alunos recorrentes ou convolucionais compactos não foi investigada, embora seja prática corrente entre usuários \cite{Atkinson2025}.
+\item \textbf{Poda estruturada em modelos convolucionais}: os ganhos de \textcite{Sudholt2023} vieram da remoção de unidades inteiras, enquanto \textcite{Sato2026} dependeram de um motor esparso dedicado; a poda estruturada de canais e camadas em redes do tipo WaveNet, que reduziria o custo em qualquer biblioteca de inferência densa, não foi avaliada.
+\item \textbf{Avaliação em \ENLang*{hardware} embarcado}: faltam medições padronizadas de latência, RTF, memória e energia em plataformas embarcadas, como placas com processadores ARM, microcontroladores e processadores digitais de sinais.
+\item \textbf{Avaliação perceptiva e padronização}: a relação entre redução de custo e degradação perceptível ainda é pouco caracterizada, sobretudo para modelos condicionados, e não há protocolo comum de métricas de qualidade e custo.
+\end{enumerate}
+
+%% ---------------------------------------------------------------------------
+\section{Considerações finais e próximos passos}%
+\label{sect:concl}
+
+Este trabalho apresentou a fundamentação, o protocolo de revisão e um mapeamento preliminar sobre otimização de modelos de IA aplicada à emulação neural de amplificadores de guitarra.
+As principais conclusões até o momento são:
+
+\begin{itemize}
+\item a emulação neural já atinge alta fidelidade, e o principal obstáculo para sua adoção em dispositivos restritos é o custo computacional;
+\item a poda é a técnica de otimização mais explorada, com resultados expressivos tanto em redes recorrentes quanto em convolucionais, mas seu ganho de tempo depende de remover estruturas inteiras ou de um motor de inferência que explore a esparsidade;
+\item quantização, combinação de técnicas, destilação a partir de professores convolucionais e poda estruturada de redes do tipo WaveNet são lacunas claras na literatura;
+\item a heterogeneidade das métricas de qualidade e de custo --- incluindo definições opostas de fator de tempo real --- e a escassez de medições em \ENLang*{hardware} embarcado limitam a comparação entre os trabalhos.
+\end{itemize}
+
+Como próximos passos do estudo, propõe-se:
+\begin{enumerate}[label = {\alph*)}]
+\item executar o protocolo de revisão por completo, registrando as contagens de cada etapa de seleção;
+\item reproduzir o treinamento de um modelo NAM de referência com conjunto de dados próprio;
+\item avaliar, sobre esse modelo, a poda (estruturada e não estruturada), a quantização e a destilação, isoladamente e em combinação;
+\item medir qualidade (ESR e teste de audição) e custo (latência, RTF e memória) em ao menos uma plataforma embarcada, usando conjuntos de dados já empregados na literatura, como os do HT-1 e do Big Muff, para permitir comparação.
+\end{enumerate}
+Esses experimentos devem delimitar a contribuição a ser aprofundada na dissertação.
+
+\begin{InfoSection}{Agradecimentos}
+Ao Programa de Pós-Graduação em Computação Aplicada da UTFPR e a Ricardo Dutra da Silva, pela orientação deste estudo individual.
+\end{InfoSection}
+
+\begin{InfoSection}{Conflito de interesse}
+Não há conflito de interesse.
+\end{InfoSection}
+
+\begin{InfoSection}{Declaração de responsabilidade}
+Os autores são os únicos responsáveis pelas informações contidas neste documento.
+\end{InfoSection}
+
+\printbibliography%% Referências
+
+\end{document}

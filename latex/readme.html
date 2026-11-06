@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./Logos/utf-favicon.ico" rel="icon" type="image/x-icon">
+    <title>[Federal University of Technology — Paraná] UTFPR-Article</title>
+  </head>
+
+  <body style="background-color: silver">
+    <a target="_blank" href="https://www.utfpr.edu.br">
+      <img src="./Logos/utfpr.png" alt="UTFPR Logo" style="float: right; width: auto; height: 60px;">
+    </a>
+    <h1>[Federal University of Technology — Paraná] UTF<span style="font-size: 18px">PR</span>-Article</h1>
+    <p><a target="_blank" href="./utfpr-article.pdf"><img src="https://img.shields.io/badge/Open%20the%20PDF%20file-green" alt="Open the PDF file"></a></p>
+    <div style="border: 2px solid black">
+      <p>This LaTeX template (unofficial) allows the production of articles of the <a target="_blank" href="https://www.utfpr.edu.br">Federal University of Technology — Paraná (UTFPR)</a>, including for events such as the Extension and Innovation Seminar (SEI) and the Scientific and Technological Initiation Seminar (SICITE), among others. It was developed using the (default) <a target="_blank" href="https://www.ctan.org/pkg/article">article</a> LaTeX class. Also, several code snippets developed by users of the <a target="_blank" href="https://tex.stackexchange.com/">TeX-LaTeX Stack Exchange</a> were used.</p>
+      <p>Status: added by Luiz E. M. Lima, maintenance on demand.<br>
+      Last updated: October 15, 2026.<br>
+      <img src="https://img.shields.io/badge/Version-2.1-blue" alt="Version 2.1"></p>
+    </div>
+    <br>
+    <div style="border: 2px solid black">
+      <p>Este modelo LaTeX (não oficial) permite a produção de artigos da <a target="_blank" href="https://www.utfpr.edu.br">Universidade Tecnológica Federal do Paraná (UTFPR)</a>, inclusive para eventos, como o Seminário de Extensão e Inovação (SEI) e o Seminário de Iniciação Científica e Tecnológica (SICITE), entre outros. Foi desenvolvido utilizando a classe LaTeX <a target="_blank" href="https://www.ctan.org/pkg/article">artigo</a> (padrão). Além disso, diversos trechos de códigos desenvolvidos por usuários do <a target="_blank" href="https://tex.stackexchange.com/">TeX-LaTeX Stack Exchange</a> foram utilizados.</p>
+      <p>Estado: adicionado por Luiz E. M. Lima, manutenção sob demanda.<br>
+      Última atualização: 15 de outubro de 2026.<br>
+      <img src="https://img.shields.io/badge/Vers%C3%A3o-2.1-blue" alt="Versão 2.1"></p>
+    </div>
+    <p>Este arquivo apresenta algumas informações a respeito do UTF<span style="font-size: 10px">PR</span>-Article, modelo LaTeX para produção de artigos da UTFPR, e está dividido nas seguintes seções:</p>
+    <ol>
+      <li>Arquivos Constituintes do Projeto.</li>
+      <li>Dicas de Uso.</li>
+      <li>Informações e Dicas sobre TeX-LaTeX.</li>
+      <li>Aplicativos e Ferramentas.</li>
+      <li>Aplicativos e Ferramentas Online.</li>
+    </ol>
+    <section>
+      <h2>1. Arquivos Constituintes do Projeto</h2>
+      <p>Breve descrição dos arquivos que devem ser manipulados no modelo LaTeX:</p>
+      <ul>
+        <li><a target="_blank" href="./utfpr-article.tex">./utfpr-article.tex</a> (principal).</li>
+        <li><a target="_blank" href="./utfpr-article.bib">./utfpr-article.bib</a> (referências — base de dados).</li>
+        <li><a target="_blank" href="./Extras/pre-textual.tex">./Extras/pre-textual.tex</a> (elementos pré-textuais).</li>
+        <li><a target="_blank" href="./Extras/post-textual.tex">./Extras/post-textual.tex</a> (elementos pós-textuais).</li>
+      </ul>
+      <p>Breve descrição dos demais arquivos constituintes:</p>
+      <ul>
+        <li><a target="_blank" href="./readme.html">./readme.html</a> (descrição e informações).</li>
+        <li><a target="_blank" href="./readme.txt">./readme.txt</a> (breve descrição).</li>
+        <li><a target="_blank" href="./utfpr-article.pdf">./utfpr-article.pdf</a> (PDF resultante da compilação).</li>
+        <li><a target="_blank" href="./utfpr-article.sty">./utfpr-article.sty</a> (pacote de estilos).</li>
+      </ul>
+      <p>Outros arquivos nos diretórios (pastas) do projeto são ilustrações, carregadas no modelo em formatos suportados, assim como alguns arquivos-fontes para geração delas ou de elementos do documento. Não apagar o conteúdo dos diretórios:</p>
+      <ul>
+        <li><a target="_blank" href="./Extras/">./Extras/</a>.</li>
+        <li><a target="_blank" href="./Headers/">./Headers/</a>.</li>
+        <li><a target="_blank" href="./Illustrations/">./Illustrations/</a>.</li>
+        <li><a target="_blank" href="./Logos/">./Logos/</a>.</li>
+        <li><a target="_blank" href="./SDG-Stamps/">./SDG-Stamps/</a>.</li>
+      </ul>
+      <h3>1.1. Compilação dos arquivos</h3>
+      <p>No diretório do projeto, abra um <i>prompt</i> de comando (no Windows) ou um console/terminal (no Linux/Unix) e digite <q><i>make help</i></q> para obter informações a respeito dos comandos de compilação dos arquivos do modelo LaTeX:</p>
+      <ul>
+        <li><a target="_blank" href="./make.bat">./make.bat</a> (<b>batchfile</b> para compilar no <i>prompt</i> de comando do Windows).</li>
+        <li><a target="_blank" href="./makefile">./makefile</a> (<b>makefile</b> para compilar no console/terminal do Linux/Unix).</li>
+      </ul>
+    </section>
+    <section>
+      <h2>2. Dicas de Uso</h2>
+      <p>Sempre que for manipular e/ou substituir um dos arquivos constituintes do projeto, mantenha uma cópia do original em um local seguro e/ou renomeie a cópia do original para poder ser seguida como um exemplo no desenvolvimento do seu próprio arquivo.</p>
+      <p>O único formato de ilustrações que pode ser inserido ao compilar com <b>LaTeX</b> é o Encapsulated PostScript (EPS). Se for compilar com <b>PDFLaTeX</b>, para produzir um PDF diretamente, tem-se uma escolha mais ampla de formatos de ilustrações para inserir:</p>
+      <ul>
+        <li>JPG:
+          <ul>
+            <li>Amplamente utilizado na internet, em câmeras digitais, etc.</li>
+            <li>Melhor escolha para fotos.</li>
+          </ul>
+        </li>
+        <li>PNG:
+          <ul>
+            <li>Um formato sem perdas e muito comum (ainda que não tanto como JPG).</li>
+            <li>Melhor escolha para diagramas (se não for possível gerar uma versão vetorial) e capturas de tela.</li>
+          </ul>
+        </li>
+        <li>PDF:
+          <ul>
+            <li>Amplamente utilizado para documentos, mas pode ser utilizado para armazenar ilustrações também.</li>
+            <li>Suporta ilustrações vetoriais e mapa de bits, mas não é recomendado para o último, pois JPG ou PNG irá fornecer o mesmo resultado com menor espaço em disco.</li>
+          </ul>
+        </li>
+        <li>EPS:
+          <ul>
+            <li>Pode ser utilizado com a ajuda do pacote epstopdf, que precisa estar instalado, mas não é necessário utilizá-lo no documento.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <section>
+      <h2>3. Informações e Dicas sobre TeX-LaTeX</h2>
+      <ul>
+        <li><a target="_blank" href="https://www.latex-project.org/">LaTeX Project</a>.</li>
+        <li><a target="_blank" href="https://www.ctan.org/">Comprehensive TeX Archive Network (CTAN)</a>.</li>
+        <li><a target="_blank" href="https://www.tug.org/">TeX Users Group (TUG)</a>.</li>
+        <li><a target="_blank" href="https://en.wikibooks.org/wiki/LaTeX/">LaTeX — Wikibooks</a>.</li>
+        <li><a target="_blank" href="https://tex.stackexchange.com/">TeX-LaTeX Stack Exchange</a>.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>4. Aplicativos e Ferramentas</h2>
+      <ul>
+        <li>Compiladores e distribuições TeX-LaTeX:
+          <ul>
+            <li><a target="_blank" href="https://www.tug.org/texlive/">TeX Live</a> (Linux e Windows).</li>
+            <li><a target="_blank" href="https://miktex.org/">MiKTeX</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.tug.org/mactex/">MacTeX</a> (Mac).</li>
+          </ul>
+        </li>
+        <li>Editores TeX-LaTeX:
+          <ul>
+            <li><a target="_blank" href="https://www.xm1math.net/texmaker/">Texmaker</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://texstudio.sourceforge.net/">TeXstudio</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.tug.org/texworks/">TeXworks</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.texniccenter.org/">TeXnicCenter</a> (Windows).</li>
+            <li><a target="_blank" href="https://www.winshell.de/">WinShell</a> (Windows).</li>
+          </ul>
+        </li>
+        <li>Editores e gerenciadores BibTeX (referências):
+          <ul>
+            <li><a target="_blank" href="https://jabref.sourceforge.net/">JabRef</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.mendeley.com/">Mendeley</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.zotero.org/">Zotero</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://sites.google.com/site/bibfilex/">Bibfilex</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.docear.org/">Docear</a> (Linux, Mac e Windows).</li>
+          </ul>
+        </li>
+        <li>Editores de equações TeX-LaTeX:
+          <ul>
+            <li><a target="_blank" href="https://sourceforge.net/projects/dragmath/">DragMath</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://equalx.sourceforge.net/">EqualX</a> (Linux, Mac e Windows).</li>
+          </ul>
+        </li>
+        <li>Editores de ilustrações:
+          <ul>
+            <li><a target="_blank" href="https://latexdraw.sourceforge.net/">LaTeXDraw</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://asymptote.sourceforge.net/">Asymptote</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://inkscape.org/">Inkscape</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.gimp.org/">GIMP</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="http://dia-installer.de/">Dia Diagram Editor</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.draw.io/">draw.io</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://gnuplot.sourceforge.net">gnuplot</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://www.geogebra.org/">GeoGebra</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://sourceforge.net/projects/gratex/">GraTeX</a> (Linux, Mac e Windows).</li>
+          </ul>
+        </li>
+        <li>Editores de tabelas TeX-LaTeX:
+          <ul>
+            <li><a target="_blank" href="https://ctan.org/pkg/excel2latex/">Excel2LaTeX</a> (Windows).</li>
+            <li><a target="_blank" href="https://calc2latex.sourceforge.net/">Calc2LaTeX</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://ctan.org/pkg/latable/">LaTable</a> (Windows).</li>
+          </ul>
+        </li>
+        <li>Visualizadores de PDF:
+          <ul>
+            <li><a target="_blank" href="https://www.sumatrapdfreader.org/free-pdf-reader.html">Sumatra PDF</a> (Windows).</li>
+            <li><a target="_blank" href="https://skim-app.sourceforge.io/">Skim</a> (Mac).</li>
+            <li><a target="_blank" href="https://wiki.gnome.org/Apps/Evince/">Evince</a> (Linux).</li>
+            <li><a target="_blank" href="https://pdfpresenter.sourceforge.net/">PDF Presenter</a> (Linux, Mac e Windows).</li>
+            <li><a target="_blank" href="https://impressive.sourceforge.net/">Impressive</a> (Linux, Mac e Windows).</li>
+          </ul>
+        </li>
+        <li>Interpretadores de Postscript e PDF:
+          <ul>
+            <li><a target="_blank" href="https://ghostscript.com/">Ghostscript</a> (Linux e Windows).</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <section>
+      <h2>5. Aplicativos e Ferramentas Online</h2>
+      <ul>
+        <li>Compiladores e editores TeX-LaTeX:
+          <ul>
+            <li><a target="_blank" href="https://overleaf.utfpr.edu.br/">Overleaf-UTFPR</a> (uma instância de <a target="_blank" href="https://www.overleaf.com/">Overleaf</a>).</li>
+            <li><a target="_blank" href="https://prism.openai.com/">Prism</a>.</li>
+            <li><a target="_blank" href="https://www.texpage.com/">TeXPage</a>.</li>
+            <li><a target="_blank" href="https://www.tutorialspoint.com/online_latex_editor.php">Online LaTeX Editor | Tutorialspoint</a>.</li>
+          </ul>
+        </li>
+        <li>Editores e gerenciadores BibTeX (referências):
+          <ul>
+            <li><a target="_blank" href="https://zbib.org/">ZoteroBib</a>.</li>
+            <li><a target="_blank" href="https://truben.no/latex/bibtex/">BibTeX Editor</a>.</li>
+            <li><a target="_blank" href="https://flamingtempura.github.io/bibtex-tidy/">BibTeX Tidy</a>.</li>
+            <li><a target="_blank" href="https://www.doi2bib.org/">doi2bib</a>.</li>
+            <li><a target="_blank" href="https://www.bruot.org/ris2bib/">Online ris2bib</a>.</li>
+          </ul>
+        </li>
+        <li>Editores de equações TeX-LaTeX:
+          <ul>
+            <li><a target="_blank" href="https://formulasheet.com/">Formula Sheet</a>.</li>
+            <li><a target="_blank" href="https://www.tutorialspoint.com/latex_equation_editor.htm">LaTeX Equation Editor | Tutorialspoint</a>.</li>
+            <li><a target="_blank" href="https://editor.codecogs.com/">Equation Editor for online mathematics</a>.</li>
+            <li><a target="_blank" href="https://www.latex4technics.com/">Online LaTeX Equation Editor</a>.</li>
+            <li><a target="_blank" href="https://mathurl.com/">mathURL</a>.</li>
+            <li><a target="_blank" href="https://www.mathcha.io/">Mathcha</a>.</li>
+          </ul>
+        </li>
+        <li>Editores de ilustrações:
+          <ul>
+            <li><a target="_blank" href="https://www.tutorialspoint.com/online_image_editor.htm">Online Image Editor | Tutorialspoint</a>.</li>
+            <li><a target="_blank" href="https://www.tutorialspoint.com/whiteboard.htm">Free Online Whiteboard | Tutorialspoint</a>.</li>
+            <li><a target="_blank" href="https://www.lucidchart.com/">Lucidchart</a>.</li>
+            <li><a target="_blank" href="https://www.draw.io/">draw.io</a>.</li>
+            <li><a target="_blank" href="https://www.geogebra.org/">GeoGebra</a>.</li>
+            <li><a target="_blank" href="https://plot.ly/">Plotly</a>.</li>
+            <li><a target="_blank" href="https://tikzcd.yichuanshen.de/">tikzcd-editor</a>.</li>
+            <li><a target="_blank" href="https://www.mathcha.io/">Mathcha</a>.</li>
+          </ul>
+        </li>
+        <li>Editores de tabelas TeX-LaTeX:
+          <ul>
+            <li><a target="_blank" href="https://www.tablesgenerator.com/">Tables Generator</a>.</li>
+            <li><a target="_blank" href="https://www.latex-tables.com/">LaTeX Tables Editor</a>.</li>
+            <li><a target="_blank" href="https://truben.no/table/">Table Editor</a>.</li>
+            <li><a target="_blank" href="https://www.mathcha.io/">Mathcha</a>.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <hr>
+    <p>Copyright © 2016–2026 <a target="_blank" href="mailto:luizeduardomlima@gmail.com">Luiz E. M. Lima</a>.</p>
+  </body>
+
+</html>

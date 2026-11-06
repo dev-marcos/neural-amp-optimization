@@ -1,0 +1,136 @@
+%%%% Elementos pós-textuais (opcionais)
+%%
+%% Glossário, Apêndices, Anexos e Índice Remissivo.
+
+%% Glossário (inserir itens em ordem alfabética)
+\begin{Glossary}%[\bfseries]%% Estilo do termo (item)
+\item[Bib\LaTeX] reimplementação completa das facilidades bibliográficas fornecidas pelo \LaTeX.
+\item[Bib\TeX] aplicativo de gerenciamento de referências para a formatação de listas de referências no \LaTeX.
+\item[GEDWeb] sistema desenvolvido para gerenciar grandes acervos de normas e informações técnicas.
+\item[ID Lattes] sequência de 16 dígitos que permite que qualquer pessoa encontre o Currículo Lattes de um{(a)} pesquisador{(a)}.
+\item[\LaTeX] conjunto de macros para o processador de textos \TeX, utilizado amplamente para a produção de textos matemáticos e científicos devido à sua alta qualidade tipográfica.
+\item[ORCID] código alfanumérico não proprietário para identificar exclusivamente cientistas, outros autores acadêmicos e contribuidores (\ENLang*{Open Researcher and Contributor ID} ou ID Aberto de Pesquisador e Contribuidor).
+\item[\TeX] sistema de tipografia criado por Donald E. Knuth.
+\item[\UTFPR-Article] modelo \LaTeX\ (não oficial) que permite a produção de artigos da Universidade Tecnológica Federal do Paraná (UTFPR), inclusive para eventos.
+\end{Glossary}
+
+%% Apêndices
+\begin{Appendix}
+
+\section{Título de Apêndice}%
+\label{sect:apx-a1}
+
+Exemplo de apêndice (\Cref{sect:apx-a1}) em uma seção de \nameref{sect:appendix}.
+
+\subsection{Título de Seção Secundária de Apêndice}%
+\label{ssect:apx-a2}
+
+Exemplo de seção secundária de apêndice (\Cref{ssect:apx-a2}).
+
+\subsubsection{Título de Seção Terciária de Apêndice}%
+\label{sssect:apx-a3}
+
+Exemplo de seção terciária de apêndice (\Cref{sssect:apx-a3}).
+
+\paragraph{Título de seção quaternária de Apêndice}%
+\label{prgh:apx-a4}
+
+Exemplo de seção quaternária de apêndice (\Cref{prgh:apx-a4}).
+
+\subparagraph{Título de seção quinária de Apêndice}%
+\label{sprgh:apx-a5}
+
+Exemplo de seção quinária de apêndice (\Cref{sprgh:apx-a5}).
+
+\section{Exemplo de Ficha de Informações}%
+\label{sect:apx-info-card}
+
+\begin{center}
+\setlength{\fboxsep}{5mm}
+\fbox{%
+  \parbox{\linewidth-2\fboxrule-2\fboxsep}{%
+    \footnotesize%
+    {\color{EmphColor}\bfseries\RcvdCall:} DD mmm. \YearNum\par%
+    {\color{EmphColor}\bfseries\AppdCall:} DD mmm. \YearNum\par%
+    \vspace*{\baselineskip}%
+    \MakeIcon{doi} {\color{EmphColor}\bfseries DOI:} \href{https://www.doi.org/10.1000/xyz123}{10.1000/xyz123}\par%
+    \vspace*{\baselineskip}%
+    {\color{EmphColor}\textbf{Como citar:}} Autor{(a)}-A1, N. C. \TheTitle. Nome do Periódico (Revista), Local (Cidade), v.~X, n.~X, p.~XX{--}XX, mmm. \YearNum. Disponível em: \url{https://www.example.com/}. Acesso em: DD mmm. \YearNum.\par%
+    \vspace*{\baselineskip}%
+    {\color{EmphColor}\textbf{Contato:}} Nome Completo do{(a)} Autor{(a)}-A1, \email{author1@domain}\par%
+    \vspace*{\baselineskip}%
+    {\color{EmphColor}\bfseries\CCLicCall:} \CCLicDescr%
+  }%
+}
+\end{center}
+
+\end{Appendix}
+
+%% Anexos
+\begin{Annex}
+
+\section{Objetivos de Desenvolvimento Sustentável (ODS)}%
+\label{sect:anx-sdg-stamps}
+
+A \Cref{fig:sdg-stamps} mostra os 17 selos dos Objetivos de Desenvolvimento Sustentável (ODS), dos quais podem ser selecionados até três referentes às contribuições pretendidas com este trabalho.
+
+\begin{figure}[!htbp]
+\SetCaptionWidth{\linewidth}
+\caption{Selos dos Objetivos de Desenvolvimento Sustentável (ODS)}%
+\label{fig:sdg-stamps}
+\dimen1 = 0.135\linewidth%
+\begin{tabular*}{\linewidth}{e{}@{}*{6}{c}@{}}
+\includegraphics[width = \dimen1]{ods01} &
+\includegraphics[width = \dimen1]{ods02} &
+\includegraphics[width = \dimen1]{ods03} &
+\includegraphics[width = \dimen1]{ods04} &
+\includegraphics[width = \dimen1]{ods05} &
+\includegraphics[width = \dimen1]{ods06} \\
+\end{tabular*}\\[\baselineskip]
+\begin{tabular*}{\linewidth}{e{}@{}*{6}{c}@{}}
+\includegraphics[width = \dimen1]{ods07} &
+\includegraphics[width = \dimen1]{ods08} &
+\includegraphics[width = \dimen1]{ods09} &
+\includegraphics[width = \dimen1]{ods10} &
+\includegraphics[width = \dimen1]{ods11} &
+\includegraphics[width = \dimen1]{ods12} \\
+\end{tabular*}\\[\baselineskip]
+\begin{tabular}{@{}*{5}{c}@{}}
+\includegraphics[width = \dimen1]{ods13} &
+\includegraphics[width = \dimen1]{ods14} &
+\includegraphics[width = \dimen1]{ods15} &
+\includegraphics[width = \dimen1]{ods16} &
+\includegraphics[width = \dimen1]{ods17} \\
+\end{tabular}
+\SourceOrNote{\citeauthor*{ONU2015} \citeyear{ONU2015}\footfullcite{ONU2015}}
+\end{figure}
+
+\section{Título de Anexo}%
+\label{sect:anx-b1}
+
+Exemplo de anexo (\Cref{sect:anx-b1}) em uma seção de \nameref{sect:annex}.
+
+\subsection{Título de Seção Secundária de Anexo}%
+\label{ssect:anx-b2}
+
+Exemplo de seção secundária de anexo (\Cref{ssect:anx-b2}).
+
+\subsubsection{Título de Seção Terciária de Anexo}%
+\label{sssect:anx-b3}
+
+Exemplo de seção terciária de anexo (\Cref{sssect:anx-b3}).
+
+\paragraph{Título de seção quaternária de Anexo}%
+\label{prgh:anx-b4}
+
+Exemplo de seção quaternária de anexo (\Cref{prgh:anx-b4}).
+
+\subparagraph{Título de seção quinária de Anexo}%
+\label{sprgh:anx-b5}
+
+Exemplo de seção quinária de anexo (\Cref{sprgh:anx-b5}).
+
+\end{Annex}
+
+%% Índice Remissivo
+\printindex%
