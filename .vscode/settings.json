@@ -1,0 +1,40 @@
+{
+  // Compila automaticamente ao salvar e abre o PDF numa aba do VS Code
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.latex.rootFile.useSubFile": false,
+
+  // Receita sem latexmk (não precisa de Perl): pdflatex -> biber -> pdflatex x2
+  "latex-workshop.latex.recipe.default": "pdflatex-biber",
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex-biber",
+      "tools": ["pdflatex", "biber", "pdflatex", "pdflatex"]
+    },
+    {
+      "name": "pdflatex (rápido, sem atualizar referências)",
+      "tools": ["pdflatex"]
+    }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error", "%DOCFILE%"],
+      "env": {}
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": ["%DOCFILE%"],
+      "env": {}
+    }
+  ],
+
+  // Apaga arquivos temporários (.aux, .bbl, .log...) depois de compilar
+  "latex-workshop.latex.autoClean.run": "onBuilt",
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux", "*.bbl", "*.bcf", "*.blg", "*.idx", "*.ind", "*.ilg", "*.lof",
+    "*.lot", "*.out", "*.toc", "*.run.xml", "*.fls", "*.fdb_latexmk"
+  ]
+}
